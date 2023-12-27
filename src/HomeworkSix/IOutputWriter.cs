@@ -1,4 +1,6 @@
-﻿public interface IOutputWriter
+﻿namespace HomeworkSix;
+
+public interface IOutputWriter
 {
     void Write(string? value = default);
 

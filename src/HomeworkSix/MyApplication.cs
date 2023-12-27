@@ -1,4 +1,6 @@
-﻿public class MyApplication
+﻿namespace HomeworkSix;
+
+public class MyApplication
 {
     private readonly IOutputWriter _outputWriter;
     private readonly IInputReader _inputReader;

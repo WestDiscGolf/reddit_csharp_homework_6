@@ -1,4 +1,6 @@
-﻿public interface IInputReader
+﻿namespace HomeworkSix;
+
+public interface IInputReader
 {
     string? ReadLine();
 }
