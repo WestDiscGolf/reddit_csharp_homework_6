@@ -1,5 +1,5 @@
 ﻿
-var app = new MyApplication(new ConsoleWriter());
+var app = new MyApplication(new ConsoleWriter(), new ConsoleReader());
 app.Run();
 
 
@@ -16,30 +16,44 @@ public class ConsoleWriter : IOutputWriter
     public void WriteLine(string? value = default) => Console.WriteLine(value);
 }
 
+public interface IInputReader
+{
+    string? ReadLine();
+}
+
+public class ConsoleReader : IInputReader
+{
+    public string? ReadLine() => Console.ReadLine();
+}
+
 public class MyApplication
 {
     private readonly IOutputWriter _outputWriter;
+    private readonly IInputReader _inputReader;
 
-    public MyApplication(IOutputWriter outputWriter)
+    public MyApplication(
+        IOutputWriter outputWriter, 
+        IInputReader inputReader)
     {
         _outputWriter = outputWriter;
+        _inputReader = inputReader;
     }
 
     public void Run()
     {
         bool isValid = false;
-        string nameList;
+        string? nameList;
         string yesNo;
 
         _outputWriter.WriteLine("Welcome to my homework app 6!");
         do
         {
             _outputWriter.Write("Please enter a name: ");
-            nameList = Console.ReadLine();
+            nameList = _inputReader.ReadLine();
             isValid = !string.IsNullOrWhiteSpace(nameList);
             if (!isValid)
             {
-                Console.WriteLine("You must enter a name.");
+                _outputWriter.WriteLine("You must enter a name.");
             }
 
         } while (!isValid);
@@ -49,7 +63,7 @@ public class MyApplication
         do
         {
             _outputWriter.Write("Would you like to add another name? Y/N ");
-            yesNo = Console.ReadLine()?.ToUpper();
+            yesNo = _inputReader.ReadLine()?.ToUpper();
             isValid = !string.IsNullOrWhiteSpace(yesNo);
 
             if (!isValid)
@@ -59,7 +73,7 @@ public class MyApplication
             else if (yesNo == "Y")
             {
                 _outputWriter.Write("Please enter the next name: ");
-                nameList += (",") + Console.ReadLine();
+                nameList += (",") + _inputReader.ReadLine();
             }
             else if (yesNo == "N")
             {
