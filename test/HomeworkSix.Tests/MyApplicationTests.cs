@@ -1,6 +1,6 @@
 namespace HomeworkSix.Tests;
 
-public class UnitTest1
+public class MyApplicationTests
 {
     [Fact]
     public void Test1()
