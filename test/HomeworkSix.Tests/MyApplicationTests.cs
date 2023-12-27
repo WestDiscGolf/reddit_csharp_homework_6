@@ -71,4 +71,34 @@ public class MyApplicationTests
         // Assert
         outputWriter.Verify(x => x.WriteLine(It.Is<string>(s => s == "AWESOME!")), Times.Once);
     }
+
+    [Theory]
+    [InlineAutoMoqData]
+    public void Add_Another_Valid_Name_HappyPath(
+        [Frozen] Mock<IOutputWriter> outputWriter,
+        [Frozen] Mock<IInputReader> inputReader,
+        string firstName,
+        string secondName,
+        MyApplication sut)
+    {
+        // Arrange
+        inputReader.SetupSequence(x => x.ReadLine())
+            .Returns(firstName)
+            .Returns("y")
+            .Returns(secondName)
+            .Returns("n");
+
+        // Act
+        sut.Run();
+
+        // Assert
+        outputWriter.Verify(x => x.WriteLine(It.Is<string>(s => s == "Welcome to my homework app 6!")), Times.Once);
+        outputWriter.Verify(x => x.Write(It.Is<string>(s => s == "Please enter a name: ")), Times.Once);
+        outputWriter.Verify(x => x.WriteLine(It.Is<string>(s => s == "AWESOME!")), Times.Once);
+        outputWriter.Verify(x => x.Write(It.Is<string>(s => s == "Would you like to add another name? Y/N ")), Times.Exactly(2));
+        outputWriter.Verify(x => x.Write(It.Is<string>(s => s == "Please enter the next name: ")), Times.Once);
+        outputWriter.Verify(x => x.WriteLine(It.Is<string>(s => string.IsNullOrWhiteSpace(s))), Times.Exactly(2));
+        outputWriter.Verify(x => x.WriteLine(It.Is<string>(s => s == $"Hello, {firstName}!")), Times.Once);
+        outputWriter.Verify(x => x.WriteLine(It.Is<string>(s => s == $"Hello, {secondName}!")), Times.Once);
+    }
 }
